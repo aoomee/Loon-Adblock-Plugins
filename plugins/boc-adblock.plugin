@@ -3,13 +3,12 @@
 #!author = aoomee
 #!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 #!system = iOS,iPadOS
-#!loon_version = 3.5.1(978)
 #!tag = 去广告,中国银行
 #!type = normal
 
 [Rewrite]
-request if ${url} ~= /^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/[^?#]+\.jpg(?:[?#].*)?$/i then reject_img(200)
-request if ${url} ~= /^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/{1,2}theme\//i then reject_img(200)
+^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/.+\.jpg reject-img
+^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/\/theme\/ reject-img
 
 [Mitm]
 hostname = *.mbs.boc.cn
