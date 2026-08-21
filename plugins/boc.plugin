@@ -1,22 +1,11 @@
 #!name = 中国银行去广告
-#!desc = 屏蔽中国银行 App 广告图片及广告下发域名；如功能异常请停用插件
-#!author = 思南, zirawell
+#!desc = 屏蔽中国银行 App 静态广告图片
+#!author = 思南
 #!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 
-# 规则来源：
-# - 思南：cdn1.mbs.boc.cn 静态广告图片规则
-# - zirawell：https://github.com/zirawell/R-Store
-# 注意：[Rule] 中两个 iisp 域名属于银行链路，若 App 功能异常，请停用本插件。
-
-[Rule]
-DOMAIN,iisp-oidea.mbs.boc.cn,REJECT
-DOMAIN,iisp.mbs.boc.cn,REJECT
-
 [Rewrite]
-^https?:\/\/mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/.+\.jpg mock-response-body data-type=text data="{}" status-code=200
-^https?:\/\/mbs\.boc\.cn\/ubas-mgateway-static\/images\/theme\/ mock-response-body data-type=text data="{}" status-code=200
-^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/.+\.jpg mock-response-body data-type=text data="{}" status-code=200
-^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/+theme\/ mock-response-body data-type=text data="{}" status-code=200
+^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/.+\.jpg reject-dict
+^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/\/theme\/ reject-dict
 
 [Mitm]
-hostname = mbs.boc.cn, cdn1.mbs.boc.cn
+hostname = *.mbs.boc.cn
