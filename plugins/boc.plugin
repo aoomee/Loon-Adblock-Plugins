@@ -1,6 +1,6 @@
 #!name = 中国银行去广告
 #!desc = 屏蔽中国银行 App 从 cdn1.mbs.boc.cn 加载的静态广告图片
-#!author = aoomee
+#!author = 思南
 #!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 
 [Rewrite]
