@@ -1,0 +1,11 @@
+#!name = 华住会去广告
+#!desc = 拦截华住会开屏接口及首页弹窗接口
+#!author = 树
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
+
+[Rewrite]
+^https?:\/\/hweb-manager\.huazhu\.com\/start\/getAppStartPage(?:\?.*)?$ reject-dict
+^https?:\/\/hweb-manager\.huazhu\.com\/notice\/getAppPopupNotifyAlert(?:\?.*)?$ reject-dict
+
+[Mitm]
+hostname = hweb-manager.huazhu.com
