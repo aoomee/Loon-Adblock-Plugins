@@ -1,11 +1,21 @@
 #!name = 中国银行去广告
-#!desc = 屏蔽中国银行 App 静态广告图片
-#!author = 思南
+#!desc = 屏蔽中国银行 App 广告图片和广告下发域名
+#!author = 思南, zirawell
 #!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 
+# Loon 3.5.1 之前的旧版 Rewrite 语法
+# 规则来源：思南、zirawell（https://github.com/zirawell/R-Store）
+
+[Rule]
+DOMAIN,iisp-oidea.mbs.boc.cn,REJECT
+DOMAIN,iisp.mbs.boc.cn,REJECT
+
 [Rewrite]
+^https?:\/\/mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/.+\.jpg reject-dict
+^https?:\/\/mbs\.boc\.cn\/ubas-mgateway-static\/images\/theme\/ reject-dict
 ^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/advertType\/.+\.jpg reject-dict
+^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/theme\/ reject-dict
 ^https?:\/\/cdn1\.mbs\.boc\.cn\/ubas-mgateway-static\/images\/\/theme\/ reject-dict
 
 [Mitm]
-hostname = *.mbs.boc.cn
+hostname = mbs.boc.cn, cdn1.mbs.boc.cn

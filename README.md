@@ -6,7 +6,7 @@
 
 | 软件 | 功能 | 原作者 | 添加到 Loon | 源码 |
 | --- | --- | --- | --- | --- |
-| 中国银行 | 屏蔽静态广告图片 | 思南 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) | [查看](./plugins/boc.plugin) |
+| 中国银行 | 屏蔽广告图片和广告下发域名 | 思南, zirawell | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) | [查看](./plugins/boc.plugin) |
 | 华住会 | 屏蔽开屏广告和首页弹窗 | 树 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fhuazhu.plugin) | [查看](./plugins/huazhu.plugin) |
 | 铁路 12306 | 移除开屏广告 | 奶思 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2F12306.lpx) | [查看](./plugins/12306.lpx) |
 | 高德地图 | 减少广告和推广内容 | 树先生, RuCu6 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Famap.lpx) | [查看](./plugins/amap.lpx) |
