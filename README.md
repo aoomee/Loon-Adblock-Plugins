@@ -2,13 +2,13 @@
 
 适用于 [Loon](https://nsloon.app/) 的去广告插件集合。
 
-插件使用兼容 Loon 3.5.0 正式版的旧版 Rewrite 语法，不依赖开发版功能。
+插件使用 Loon 3.5.1 (978) 之前的旧版 Rewrite 语法，不依赖开发版功能。
 
 ## 插件列表
 
 | 应用 | 插件 | 安装链接 |
 | --- | --- | --- |
-| 中国银行 | 屏蔽首页等位置加载的静态广告图片 | [安装插件](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc-adblock.plugin) |
+| 中国银行 | 屏蔽首页等位置加载的静态广告图片 | [安装插件](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) |
 
 ## 使用方法
 
@@ -26,5 +26,5 @@
 ## 插件订阅地址
 
 ```text
-https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/main/plugins/boc-adblock.plugin
+https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/main/plugins/boc.plugin
 ```
