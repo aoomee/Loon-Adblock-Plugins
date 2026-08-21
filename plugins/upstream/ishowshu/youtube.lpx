@@ -1,0 +1,19 @@
+#!name = Youtube (Music) Enhance
+#!desc = 适用于 Youtube & Youtube Music
+#!author = Maasea
+#!icon = https://github.com/ishowshu/loon/raw/refs/heads/main/icon/youtube.png
+
+[Argument]
+captionLang=select,"zh-Hans","zh-Hant","ja","ko","en","off",tag=字幕翻译语言
+blockUpload=switch,false,tag=屏蔽上传按钮
+blockImmersive=switch,false,tag=屏蔽选段按钮
+blockShorts=switch,false,tag=屏蔽Shorts按钮
+debug=switch,false,tag=启用调试模式
+
+[Script]
+http-response ^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch|log_event|config))(\?(.*))?$ script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,tag=protobuf,requires-body=true,binary-body-mode=true,argument=[{captionLang},{blockUpload},{blockImmersive},{blockShorts},{debug}]
+http-request ^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&ack.* script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js,tag=youtube.request.init,requires-body=true,binary-body-mode=true,argument=[{captionLang}]
+http-request ^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/log_event script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.request.js,tag=youtube.request.log_event,requires-body=true,binary-body-mode=true
+
+[MITM]
+hostname = *.googlevideo.com, youtubei.googleapis.com

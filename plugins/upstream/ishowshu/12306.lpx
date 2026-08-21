@@ -1,0 +1,10 @@
+#!name = 铁路12306
+#!desc = 移除开屏广告
+#!author = 奶思
+#!icon = https://github.com/ishowshu/loon/raw/refs/heads/main/icon/12306.png
+
+[Script]
+http-request ^https?:\/\/ad\.12306\.cn\/ad\/ser\/getAdList script-path=https://raw.githubusercontent.com/kokoryh/Script/master/js/12306.js, requires-body=true, timeout=60, tag=开屏广告
+
+[MitM]
+hostname = ad.12306.cn

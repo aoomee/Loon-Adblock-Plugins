@@ -1,0 +1,12 @@
+#!name = 京东
+#!desc = 移除开屏广告
+#!author = 树先生
+#!icon = https://github.com/ishowshu/loon/raw/refs/heads/main/icon/jd.png
+
+
+[Rewrite]
+^https?:\/\/m\.360buyimg\.com\/mobilecms\/s1125x2436_jfs reject-200
+^https?:\/\/m\.360buyimg\.com\/mobilecms\/jfs\/t1\/\d+\/\d+\/\d+\/\d+\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+\.jpg$ reject-200
+
+[MitM]
+hostname = m.360buyimg.com

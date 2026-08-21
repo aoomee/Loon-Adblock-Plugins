@@ -11,6 +11,12 @@
 | 中国银行 | 屏蔽首页等位置加载的静态广告图片 | [安装插件](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) |
 | 华住会 | 屏蔽开屏广告和首页弹窗 | [安装插件](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fhuazhu.plugin) |
 
+## 经授权转载
+
+- [`ishowshu/loon` 插件快照](./plugins/upstream/ishowshu)：原样转载上游 `plugin` 目录，共 15 个文件。
+- [来源、作者与快照说明](./plugins/upstream/NOTICE.md)
+- 转载文件的权利仍归各原作者所有，不适用本仓库根目录的 MIT License。
+
 ## 使用方法
 
 1. 在安装了 Loon 的 iPhone 或 iPad 上点击上方安装链接。

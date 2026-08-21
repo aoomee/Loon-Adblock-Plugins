@@ -1,0 +1,12 @@
+#!name = Github
+#!desc = 解除拉取限制
+#!author = 树先生
+#!icon = https://github.com/ishowshu/loon/raw/refs/heads/main/icon/github.png
+
+[Rewrite]
+^https:\/\/(raw|gist)\.githubusercontent\.com\/ header-replace Accept-Language en-us
+^https:\/\/github\.com\/ header-replace Accept-Language en-us
+^https:\/\/api\.github\.com\/ header-replace Accept-Language en-us
+
+[MitM]
+hostname = raw.githubusercontent.com,gist.githubusercontent.com,github.com

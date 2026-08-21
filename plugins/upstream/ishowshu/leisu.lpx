@@ -1,0 +1,41 @@
+#!name = 雷速体育
+#!desc = 移除开屏和评论区广告
+#!author = 树先生
+#!icon = https://github.com/ishowshu/loon/raw/refs/heads/main/icon/leisu.png
+#!date = 2026-08-20 18:00
+
+[Rule]
+DOMAIN, api-ad.chuangyuejoy.com, REJECT
+DOMAIN, dsp-tos.mongac.com, REJECT
+DOMAIN, et.tanx.com, REJECT
+DOMAIN-SUFFIX, ubixioe.com, REJECT
+DOMAIN, v.adintl.cn, REJECT
+DOMAIN-SUFFIX, shunchangzhixing.com, REJECT
+DOMAIN, ad-api.adn-plus.com.cn, REJECT
+DOMAIN, res1.hubcloud.com.cn, REJECT
+DOMAIN-SUFFIX, zhangyuyidong.cn, REJECT
+DOMAIN, sdk.1rtb.net, REJECT
+DOMAIN, opehs.tanx.com, REJECT
+DOMAIN, dsp.1rtb.com, REJECT
+DOMAIN, dsp.ads.umeng.com, REJECT
+DOMAIN, analytics.oceanengine.com, REJECT
+DOMAIN, sdk-config.tanx.com, REJECT
+DOMAIN, adsmartget.datads.cn, REJECT
+DOMAIN, api-access.pangolin-sdk-toutiao-b.com, REJECT
+DOMAIN, api-access.pangolin-sdk-toutiao.com, REJECT
+DOMAIN-suffix, anythinktech.com, REJECT
+DOMAIN, tnc3-alisc1.zijieapi.com, REJECT
+DOMAIN, v2mi.gdt.qq.com, REJECT
+DOMAIN-suffix, pglstatp-toutiao.com, REJECT
+DOMAIN, pgdt.ugdtimg.com, REJECT
+DOMAIN, mi.gdt.qq.com, REJECT
+
+AND,((USER-AGENT,"leisu*"),(URL-REGEX,"^https:\/\/img1\.360buyimg\.com\/pop\/jfs\/t1")),REJECT-DICT
+AND,((USER-AGENT,"leisu*"),(URL-REGEX,"^https:\/\/s3plus\.meituan\.net\/")),REJECT-DICT
+AND,((USER-AGENT,"leisu*"),(DOMAIN-SUFFIX,douyinpic.com)),REJECT-DICT
+
+[Rewrite]
+^https:\/\/app-gateway\.leisuapi\.com\/v1\/app\/mobile\/ads REJECT-DICT
+
+[MitM]
+hostname = s3plus.meituan.net, img1.360buyimg.com, app-gateway.leisuapi.com
