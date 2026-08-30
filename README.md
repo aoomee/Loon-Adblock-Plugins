@@ -18,6 +18,7 @@
 | 京东 | 移除开屏广告 | 树先生 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fjd.lpx) | [查看](./plugins/jd.lpx) |
 | Keep | 减少广告和推广内容 | 树先生 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fkeep.lpx) | [查看](./plugins/keep.lpx) |
 | 雷速体育 | 移除开屏和评论区广告 | 树先生 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fleisu.lpx) | [查看](./plugins/leisu.lpx) |
+| Soul | 移除广告和精简页面 | 树先生, 可莉, 奶思, 怎么肥事 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fsoul.lpx) | [查看](./plugins/soul.lpx) |
 | 拼多多 | 减少广告和推广内容 | 树先生 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fpdd.lpx) | [查看](./plugins/pdd.lpx) |
 | 朴朴超市 | 移除广告和推荐内容 | 树先生, 可莉 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fpupu.lpx) | [查看](./plugins/pupu.lpx) |
 | 淘宝 | 移除开屏广告 | 树先生 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Ftaobao.lpx) | [查看](./plugins/taobao.lpx) |
