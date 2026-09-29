@@ -3,8 +3,9 @@
 #!author = aoomee
 #!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 
+# 版本：2026-09-29.2（增加缓存播放器的页面内拦截）
 # 按 2026-09-29 首页 HTML 的广告容器编写。
-# 单文件插件：在 HTML 中注入 CSS，也能隐藏后续动态插入的同类广告。
+# 单文件插件：注入 CSS 和播放器广告钩子；外部播放器脚本命中缓存时也能生效。
 # 这是视觉隐藏，不保证阻止广告资源下载；不拦截共用图片 CDN。
 # 仅处理指定域名的 HTML 和 DPlayer 初始化脚本，不修改接口、图片、视频响应。
 # 安装后刷新页面；已有页面缓存可能需要清除。网页结构变化后需更新选择器。
@@ -14,7 +15,8 @@
 # 只替换公开方法的映射，不依赖混淆变量名，不屏蔽整个播放器脚本。
 response if ${url} ~= /^https:\/\/(?:www\.)?51cg1\.com\/usr\/plugins\/DPlayer\/assets\/player\.min\.v\.\d+(?:\.\d+)*\.js(?:\?[^#]*)?$/i then response.body.replace(/(['"]pickAdConfig['"]\s*:\s*)[$\w]+(?=\s*[,}])/, "$1function(){return null;}")
 
-response if ${url} ~= /^https:\/\/(?:www\.)?51cg1\.com\//i && ${response.header['Content-Type']} ~= /text\/html/i then response.body.replace(/<\/head\s*>/i, "<style id='loon-51cg-adblock'>#adFloat,.xqbj-component-adfloat,article.ad-item,.post-card-ads,.recommend-layer,section.horizontal-block,.addbox,a[data-event='ad_click'],.nav-item:has(> #more-menu-dropdown-37){display:none!important;visibility:hidden!important;pointer-events:none!important}</style></head>")
+# 页面头部在播放器加载前拦截广告模块赋值，保留内联播放和音频清理方法。
+response if ${url} ~= /^https:\/\/(?:www\.)?51cg1\.com\//i && ${response.header['Content-Type']} ~= /text\/html/i then response.body.replace(/<\/head\s*>/i, "<style id='loon-51cg-adblock'>#adFloat,.xqbj-component-adfloat,article.ad-item,.post-card-ads,.recommend-layer,section.horizontal-block,.addbox,a[data-event='ad_click'],.nav-item:has(> #more-menu-dropdown-37){display:none!important;visibility:hidden!important;pointer-events:none!important}</style><script id='loon-51cg-preroll'>(function(w){var key='DPLAYER_PREROLL_AD',value=w[key];function patch(ad){if(ad&&typeof ad==='object'){ad.pickAdConfig=function(){return null;};ad.attachPreRollAd=function(player){return player;};}return ad;}try{var d=Object.getOwnPropertyDescriptor(w,key);if(!d||d.configurable){value=patch(value);Object.defineProperty(w,key,{configurable:true,enumerable:true,get:function(){return value;},set:function(ad){value=patch(ad);}});}else{patch(value);}}catch(e){}})(window);</script></head>")
 
 [Mitm]
 hostname = 51cg1.com, www.51cg1.com
