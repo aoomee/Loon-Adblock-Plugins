@@ -23,7 +23,7 @@
 | 朴朴超市 | 移除广告和推荐内容 | 树先生, 可莉 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fpupu.lpx) | [查看](./plugins/pupu.lpx) |
 | 淘宝 | 移除开屏广告 | 树先生 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Ftaobao.lpx) | [查看](./plugins/taobao.lpx) |
 | YouTube / YouTube Music | 广告过滤和播放体验优化 | Maasea | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fyoutube.lpx) | [查看](./plugins/youtube.lpx) |
-| 51 吃瓜网页 | 隐藏网页广告、跳过播放器 5 秒片头广告 | aoomee | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Frefs%2Fheads%2Fmain%2Fplugins%2F51cg.plugin) | [查看](./plugins/51cg.plugin) |
+| 51 吃瓜网页 | 隐藏网页广告、跳过播放器 5 秒片头广告 | aoomee | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Frefs%2Fheads%2Fmain%2Fplugins%2F51cg.plugin%3Fv%3D20260929211339) | [查看](./plugins/51cg.plugin) |
 
 ## 使用方法
 
