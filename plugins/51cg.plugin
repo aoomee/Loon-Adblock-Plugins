@@ -1,7 +1,10 @@
 #!name = 51吃瓜网页去广告
-#!desc = 隐藏 51cg1.com 网页广告、文章页推广与评论输入区，并跳过视频片头广告。需要 Loon 3.5.1 (983) 或更新版本，并启用 MitM。
+#!desc = 过滤网页与视频广告，精简推广模块。
+#!date = 2026-09-29 21:13:39
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins/blob/main/plugins/51cg.plugin
 #!author = aoomee
-#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
+#!icon = https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/refs/heads/main/icons/51cg.png
+#!loon_version = 3.5.1(983)
 
 # 版本：2026-09-29.3（隐藏文章页推广区、推荐导航和评论输入区）
 # 按 2026-09-29 首页 HTML 的广告容器编写。
