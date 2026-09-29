@@ -1,22 +1,23 @@
 #!name = 51吃瓜网页去广告
-#!desc = 隐藏 51cg1.com 网页广告，并跳过 DPlayer 播放前的 5 秒图片广告。需要 Loon 3.5.1 (983) 或更新版本，并启用 MitM。
+#!desc = 隐藏 51cg1.com 网页广告、文章页推广与评论输入区，并跳过视频片头广告。需要 Loon 3.5.1 (983) 或更新版本，并启用 MitM。
 #!author = aoomee
 #!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 
-# 版本：2026-09-29.2（增加缓存播放器的页面内拦截）
+# 版本：2026-09-29.3（隐藏文章页推广区、推荐导航和评论输入区）
 # 按 2026-09-29 首页 HTML 的广告容器编写。
 # 单文件插件：注入 CSS 和播放器广告钩子；外部播放器脚本命中缓存时也能生效。
 # 这是视觉隐藏，不保证阻止广告资源下载；不拦截共用图片 CDN。
 # 仅处理指定域名的 HTML 和 DPlayer 初始化脚本，不修改接口、图片、视频响应。
 # 安装后刷新页面；已有页面缓存可能需要清除。网页结构变化后需更新选择器。
 
+# 页面精简：隐藏截图中的文章附加区；正文、视频和已有评论保留。
 [Rewrite]
 # 让广告配置选择器返回空值，沿用播放器原有的无广告播放分支。
 # 只替换公开方法的映射，不依赖混淆变量名，不屏蔽整个播放器脚本。
 response if ${url} ~= /^https:\/\/(?:www\.)?51cg1\.com\/usr\/plugins\/DPlayer\/assets\/player\.min\.v\.\d+(?:\.\d+)*\.js(?:\?[^#]*)?$/i then response.body.replace(/(['"]pickAdConfig['"]\s*:\s*)[$\w]+(?=\s*[,}])/, "$1function(){return null;}")
 
 # 页面头部在播放器加载前拦截广告模块赋值，保留内联播放和音频清理方法。
-response if ${url} ~= /^https:\/\/(?:www\.)?51cg1\.com\//i && ${response.header['Content-Type']} ~= /text\/html/i then response.body.replace(/<\/head\s*>/i, "<style id='loon-51cg-adblock'>#adFloat,.xqbj-component-adfloat,article.ad-item,.post-card-ads,.recommend-layer,section.horizontal-block,.addbox,a[data-event='ad_click'],.nav-item:has(> #more-menu-dropdown-37){display:none!important;visibility:hidden!important;pointer-events:none!important}</style><script id='loon-51cg-preroll'>(function(w){var key='DPLAYER_PREROLL_AD',value=w[key];function patch(ad){if(ad&&typeof ad==='object'){ad.pickAdConfig=function(){return null;};ad.attachPreRollAd=function(player){return player;};}return ad;}try{var d=Object.getOwnPropertyDescriptor(w,key);if(!d||d.configurable){value=patch(value);Object.defineProperty(w,key,{configurable:true,enumerable:true,get:function(){return value;},set:function(ad){value=patch(ad);}});}else{patch(value);}}catch(e){}})(window);</script></head>")
+response if ${url} ~= /^https:\/\/(?:www\.)?51cg1\.com\//i && ${response.header['Content-Type']} ~= /text\/html/i then response.body.replace(/<\/head\s*>/i, "<style id='loon-51cg-adblock'>[data-loon-cleanup],#body-bottom>.container>.post-content,#comments .respond,#post .post-content>.content-tabs:has(.app-download):has(.download-section),#post .post-content>div:has(>.btn-download):has(>.copy-box),#adFloat,.xqbj-component-adfloat,article.ad-item,.post-card-ads,.recommend-layer,section.horizontal-block,.addbox,a[data-event='ad_click'],.nav-item:has(> #more-menu-dropdown-37){display:none!important;visibility:hidden!important;pointer-events:none!important}</style><script id='loon-51cg-preroll'>(function(w){var key='DPLAYER_PREROLL_AD',value=w[key];function patch(ad){if(ad&&typeof ad==='object'){ad.pickAdConfig=function(){return null;};ad.attachPreRollAd=function(player){return player;};}return ad;}try{var d=Object.getOwnPropertyDescriptor(w,key);if(!d||d.configurable){value=patch(value);Object.defineProperty(w,key,{configurable:true,enumerable:true,get:function(){return value;},set:function(ad){value=patch(ad);}});}else{patch(value);}}catch(e){}})(window);</script><script id='loon-51cg-cleanup'>(function(){function hide(el){el.setAttribute('data-loon-cleanup','');}function clean(){document.querySelectorAll('#post .post-content>blockquote').forEach(function(el){var title=el.querySelector('strong');if(title&&title.textContent.replace(/\\s/g,'').indexOf('51吃瓜最新地址')!==-1)hide(el);});document.querySelectorAll('#post .post-content>p').forEach(function(el){var title=el.textContent.replace(/\\s/g,''),table=el.nextElementSibling;if((title==='🔥热门吃瓜'||title==='热门吃瓜')&&table&&table.tagName==='TABLE'){hide(el);hide(table);}});}function start(){clean();var pending=false;new MutationObserver(function(){if(pending)return;pending=true;setTimeout(function(){pending=false;clean();},0);}).observe(document.body,{childList:true,subtree:true});}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();})();</script></head>")
 
 [Mitm]
 hostname = 51cg1.com, www.51cg1.com

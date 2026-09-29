@@ -37,7 +37,7 @@ function checkPatched(actual, original) {
 
 test('HTML keeps original content and installs the hook before body scripts', () => {
   assert.equal(rewritten.replace(/<style id='loon-51cg-adblock'>[\s\S]*?<\/style>/, '')
-    .replace(/<script id='loon-51cg-preroll'>[\s\S]*?<\/script>/, ''), html);
+    .replace(/<script id='loon-51cg-(?:preroll|cleanup)'>[\s\S]*?<\/script>/g, ''), html);
   assert.ok(rewritten.indexOf('loon-51cg-preroll') < rewritten.indexOf('<body>'));
 });
 
