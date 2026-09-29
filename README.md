@@ -6,6 +6,7 @@
 
 | 软件 | 功能 | 原作者 | 添加到 Loon | 源码 |
 | --- | --- | --- | --- | --- |
+| 51 吃瓜网页 | 隐藏网页广告、跳过播放器 5 秒片头广告 | aoomee | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2F51cg.plugin) | [查看](./plugins/51cg.plugin) |
 | 中国银行 | 屏蔽广告图片和广告下发域名 | 思南, zirawell | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) | [查看](./plugins/boc.plugin) |
 | 华住会 | 屏蔽开屏广告和首页弹窗 | 树 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fhuazhu.plugin) | [查看](./plugins/huazhu.plugin) |
 | 铁路 12306 | 移除开屏广告 | 奶思 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2F12306.lpx) | [查看](./plugins/12306.lpx) |
@@ -30,6 +31,17 @@
 2. 检查插件内容后添加并启用。
 3. 插件包含 MitM 时，需安装并信任 Loon 证书，同时开启 HTTPS 解密。
 4. 完全退出目标 App 后重新打开。
+
+## 51 吃瓜网页插件
+
+[51cg.plugin](./plugins/51cg.plugin) 是单文件网页去广告插件，需要 **Loon 3.5.1 (983) 或更新版本**。将文件导入 Loon 的插件列表并启用，开启 MitM、安装并信任 Loon 证书，然后重新加载 `https://51cg1.com/`。如果仍显示旧页面，可清除该站点的网页缓存后再试。
+
+- 按 2026-09-29 获取的首页 HTML，隐藏列表广告卡片、悬浮广告、推荐弹窗、底部广告横幅、App 推广条和“精品应用”推广菜单；CSS 同样适用于动态插入的同类元素。
+- 对 DPlayer 初始化脚本的 `pickAdConfig` 方法作定点替换，使用播放器原有的无广告分支，跳过播放前的 5 秒图片广告及倒计时；保留视频地址、解码逻辑和播放控制。
+- 只匹配 `51cg1.com` 和 `www.51cg1.com` 的 HTML 及指定 DPlayer 脚本。站点跳转到其他域名时，需要核对页面结构并更新域名范围。
+- 网页广告使用 CSS 进行视觉隐藏，不保证阻止其资源下载；不处理视频流中嵌入的广告。保留共用图片域名。
+- 网页隐藏已获用户反馈有效；播放器改写已用获取的脚本验证，尚待手机实测。更新插件后如仍出现 5 秒广告，请清除该站点的浏览器缓存并重新打开页面，确保播放器脚本重新请求。
+- 规则语法参考 [Loon Rewrite 文档](https://nsloon.app/docs/Rewrite/rewrite_v2/)。
 
 ## 来源与说明
 
