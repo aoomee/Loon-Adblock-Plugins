@@ -1,0 +1,19 @@
+#!name = 91Porn 网页去广告
+#!desc = 过滤横幅与侧栏广告，跳过视频片头广告。
+#!date = 2026-10-09 16:36:50
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins/blob/main/plugins/91porn.plugin
+#!author = aoomee
+#!icon = https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/refs/heads/main/icons/91porn.png
+#!loon_version = 3.5.1(983)
+
+# 依据 2026-10-09 首页和视频详情页编写；只作用于 91porn.com 和 www.91porn.com。
+# 片头广告：将播放器的 preroll 调用替换为空操作，保留播放、画中画和快进功能。
+# 页面广告：移除 JuicyAds 加载脚本和已确认的侧栏广告 iframe，隐藏广告图片与占位。
+# 不修改视频源、登录、观看权限或验证页面；CSS 隐藏不保证阻止所有广告图片下载。
+# 需开启 MitM 并信任证书。更新后重新打开页面；缓存旧页面时需清除站点缓存。
+
+[Rewrite]
+response if ${url} ~= /^https?:\/\/(?:www\.)?91porn\.com\//i && ${response.header['Content-Type']} ~= /text\/html/i then response.body.replace(/\bplayer\.preroll\s*\(/, "void(") | response.body.replace(/<script\b[^>]*\bsrc\s*=\s*['"]https?:\/\/poweredby\.jads\.co\/js\/jads\.js(?:\?[^'"]*)?['"][^>]*>[\s\S]*?<\/script\s*>/i, "") | response.body.replace(/<iframe\b[^>]*\bsrc\s*=\s*['"]https?:\/\/go\.rmhfrtnd\.com\/smartpop\/[^'"]*['"][^>]*>[\s\S]*?<\/iframe\s*>/i, "") | response.body.replace(/<\/head\s*>/i, "<style id='loon-91porn-adblock'>.ad_img,a:has(>.ad_img),.cont6:has(.ad_img),ins[id][data-width][data-height],iframe[src^='https://go.rmhfrtnd.com/smartpop/']{display:none!important;visibility:hidden!important;pointer-events:none!important}</style></head>")
+
+[Mitm]
+hostname = 91porn.com, www.91porn.com
