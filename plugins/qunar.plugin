@@ -1,0 +1,17 @@
+#!name = 去哪儿配套清理 v1
+#!desc = 清理已识别的我的页推广、内容流、行程推广及业务广告。自动加载本仓库在线脚本；不保证移除本地固定界面。含手动运行状态脚本。
+#!author = aoomee
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins/blob/main/docs/qunar.md
+#!loon_version = 3.5.1(983)
+#!tag = 去哪儿,界面清理
+
+[Rewrite]
+request if ${url} ~= /^https?:\/\/homefront\.qunar\.com\/front\/splash\/ad(?:\?|$)/ then reject
+request if ${url} ~= /^https?:\/\/qde\.qunar\.com\/preload(?:\?|$)/ then reject
+
+[Script]
+response if ${url} ~= /^https?:\/\/(?:slugger|minislugger|homefront|homeback|qbi|lang|qde|client)\.qunar\.com\// then script("https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/main/scripts/qunar-clean.js") with requires_body=true, timeout=10, tag="去哪儿配套清理"
+generic then script("https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/main/scripts/qunar-clean.js") with tag="去哪儿清理运行状态", timeout=10
+
+[MitM]
+hostname = slugger.qunar.com,minislugger.qunar.com,homefront.qunar.com,homeback.qunar.com,qbi.qunar.com,lang.qunar.com,qde.qunar.com,client.qunar.com

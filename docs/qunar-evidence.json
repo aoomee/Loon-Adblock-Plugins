@@ -1,0 +1,101 @@
+{
+  "version": "1.0.0",
+  "date": "2026-10-10",
+  "scope": "Hosted Loon companion; device and Loon parser unverified",
+  "basis": [
+    {
+      "bundle": "cmn_mine",
+      "module": 200275,
+      "services": [
+        "pp_gw_u_myHeadInfo",
+        "pp_gw_u_myMainCard",
+        "p_feedlist_recommend"
+      ],
+      "fields": [
+        "data.rightQuickEntrance",
+        "data.financial.cards",
+        "data.financialBanner",
+        "data.contentList",
+        "data.pageFinished"
+      ]
+    },
+    {
+      "bundle": "cmn_mine",
+      "module": 200286,
+      "service": "m_gw_myPage_doAppDelivery",
+      "fields": [
+        "data.popInfo",
+        "data.floatInfo"
+      ]
+    },
+    {
+      "bundle": "commonbusiness",
+      "modules": [
+        201691,
+        201799,
+        201774,
+        201701
+      ],
+      "services": [
+        "p_tripcard_list",
+        "content_api_common_feed_open_postList"
+      ],
+      "fields": [
+        "data.emptyCardMap",
+        "data.funMapCard",
+        "data.list",
+        "data.isLastOne",
+        "data.fastFilterNameList"
+      ]
+    },
+    {
+      "bundle": "t_home",
+      "module": 200633,
+      "service": "t_ga_TrainBottomADBanner",
+      "fields": [
+        "bottomADBannerMap"
+      ]
+    },
+    {
+      "bundle": "f_home",
+      "module": 200061,
+      "services": [
+        "f_flight_home_banner",
+        "f_flight_homecard_banner",
+        "f_flight_home_bottom",
+        "f_sylas_get_adspotId",
+        "f_flightHome_float_window"
+      ]
+    },
+    {
+      "binary": "QunariPhone_Cook_CM",
+      "classes": [
+        "QWHAdvertiseInfo",
+        "SearchFiveCardModel"
+      ],
+      "note": "Native model field names; network shape matching not verified with live traffic"
+    },
+    {
+      "binary_literals": [
+        "https://homefront.qunar.com/front/splash/ad",
+        "https://qde.qunar.com/preload?bp=bp1&pg=home&plateform=app&pos=top&site=app.qunar&size=%lux%lu"
+      ],
+      "action": "Exact URL-path reject, not whole host blocking"
+    }
+  ],
+  "validation": {
+    "offline_tests": 28,
+    "result": "passed",
+    "fixtures": "synthetic; derived from app code",
+    "loon_parser": "not run",
+    "device": "not run"
+  },
+  "docs": [
+    "https://nsloon.app/docs/Plugin/",
+    "https://nsloon.app/docs/Script/script_v2/",
+    "https://nsloon.app/docs/Script/",
+    "https://nsloon.app/docs/Rewrite/rewrite_v2/",
+    "https://nsloon.app/docs/Rewrite/",
+    "https://nsloon.app/docs/Script/script_api/"
+  ]
+}

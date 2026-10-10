@@ -6,6 +6,7 @@
 
 | 软件 | 功能 | 原作者 | 添加到 Loon | 源码 |
 | --- | --- | --- | --- | --- |
+| 去哪儿旅行 | 清理已识别的我的页推广、内容流及部分业务广告；[范围与限制](./docs/qunar.md) | aoomee | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fqunar.plugin) · [旧版 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fqunar-legacy.plugin) | [规则](./plugins/qunar.plugin) · [脚本](./scripts/qunar-clean.js) |
 | 中国银行 | 屏蔽广告图片和广告下发域名 | 思南, zirawell | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) | [查看](./plugins/boc.plugin) |
 | 华住会 | 屏蔽开屏广告和首页弹窗 | 树 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fhuazhu.plugin) | [查看](./plugins/huazhu.plugin) |
 | 铁路 12306 | 移除开屏广告 | 奶思 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2F12306.lpx) | [查看](./plugins/12306.lpx) |
@@ -32,6 +33,8 @@
 2. 检查插件内容后添加并启用。
 3. 插件包含 MitM 时，需安装并信任 Loon 证书，同时开启 HTTPS 解密。
 4. 完全退出目标 App 后重新打开。
+
+去哪儿插件会自动加载本仓库的在线脚本，无需单独导入 JavaScript。新版入口要求 Loon 3.5.1（983）或更新版本；较旧版本使用“旧版 Loon”，两者只启用一个。当前适配依据为去哪儿 5.3.8，已通过离线测试，尚未完成真机验收。
 
 ## 来源与说明
 
