@@ -6,6 +6,7 @@
 
 | 软件 | 功能 | 原作者 | 添加到 Loon | 源码 |
 | --- | --- | --- | --- | --- |
+| 航旅纵横 | 开屏/弹窗、首页运营位、瀑布流、会员推广、行程扩容与广告图片清理 | @ddgksf2013 / 墨鱼（Loon 适配 aoomee） | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fumetrip.plugin) | [规则](./plugins/umetrip.plugin) · [说明](./docs/umetrip.md) |
 | 去哪儿旅行 | 清理已识别的我的页推广、内容流及部分业务广告；[范围与限制](./docs/qunar.md) | aoomee | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fqunar.plugin) · [旧版 Loon](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fqunar-legacy.plugin) | [规则](./plugins/qunar.plugin) · [脚本](./scripts/qunar-clean.js) |
 | 中国银行 | 屏蔽广告图片和广告下发域名 | 思南, zirawell | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fboc.plugin) | [查看](./plugins/boc.plugin) |
 | 华住会 | 屏蔽开屏广告和首页弹窗 | 树 | [添加](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fhuazhu.plugin) | [查看](./plugins/huazhu.plugin) |

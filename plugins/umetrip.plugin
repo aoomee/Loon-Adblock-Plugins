@@ -1,0 +1,15 @@
+#!name = 航旅纵横广告净化（墨鱼版）
+#!desc = 清理航旅纵横开屏、运营位、信息流、会员营销与行程扩容推广，并拦截广告图片。需要开启 MitM 并信任 Loon 证书。
+#!author = @ddgksf2013 / 墨鱼；Loon 适配 aoomee
+#!homepage = https://ddgksf2013.top/rewrite/UmetripAds.conf
+#!loon_version = 3.5.1(983)
+#!tag = 航旅纵横,广告净化
+
+[Rewrite]
+request if ${url} ~= /^https:\/\/oss\.umetrip\.com\/fs\/advert\// then reject_img(200)
+
+[Script]
+response if ${url} ~= /^https:\/\/(?:sns|appmsg|home|umehome|opactivity|activity|umerp|flightstatus|umeflightstatus|startup|umestartup|user|umeuser|event)\.umetrip\.com\/gateway\/api\/umetrip\/native(?:\?.*)?$/ then script("https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/main/scripts/umetrip-clean.js") with requires_body=true, binary_body_mode=true, timeout=60, tag="航旅纵横广告净化"
+
+[MitM]
+hostname = sns.umetrip.com,appmsg.umetrip.com,home.umetrip.com,umehome.umetrip.com,opactivity.umetrip.com,activity.umetrip.com,umerp.umetrip.com,flightstatus.umetrip.com,umeflightstatus.umetrip.com,startup.umetrip.com,umestartup.umetrip.com,user.umetrip.com,umeuser.umetrip.com,event.umetrip.com,oss.umetrip.com
