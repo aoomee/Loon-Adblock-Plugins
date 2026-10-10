@@ -1,0 +1,66 @@
+#!name = YouTube 中文增强版
+#!desc = 清理 YouTube 应用广告，支持后台播放和已有字幕翻译（目标语言为 zh-CN 或 en-US；没有字幕的视频无法翻译）。日志默认只记录媒体响应头，完整采样可能增加延迟。需要开启 MitM 并信任 Loon 证书。
+#!openUrl = https://loon-plugins.vercel.app
+#!author = devchristian1337 · 汉化 aoomee
+#!tag = YouTube, 去广告
+#!loon_version = 3.5.1(983)
+#!homepage = https://github.com/devchristian1337/loon-plugins/blob/main/README.md
+#!icon = https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/App-Icons/youtube.png
+#!date = 2026-10-10
+
+[Argument]
+background_playback = switch,false,tag=后台播放,desc=切换应用或锁屏后，普通视频仍可继续播放音频。直播和受限内容仍由 YouTube 决定
+playback_region = select,"original","CN","HK","TW","US","JP","KR","SG","GB","DE","RU",tag=播放请求地区,desc=original 保持当前地区。此项只修改客户端 gl 参数，不改变出口 IP。对去广告的影响仍待验证
+translation_enabled = switch,false,tag=字幕翻译,desc=将已有字幕翻译成所选目标语言。关闭后保留原始字幕请求
+translation_target = select,"zh-CN","en-US",tag=字幕目标语言,desc=只转换已有字幕轨道（简体中文 zh-CN 或美式英语 en-US）。没有字幕的视频无法翻译；音轨、标题和简介保持不变
+hide_home_shorts = switch,false,tag=隐藏首页 Shorts,desc=从首页信息流移除 Shorts 内容栏；底部 Shorts 标签和其他页面保留
+blocked_channels = input,"",tag=屏蔽频道,desc=填写频道 ID、@用户名或完整频道名，多个条目以空格分隔。优先使用频道 ID；频道名含空格时请填用户名或 ID。留空则停用。只隐藏能识别出所属频道的视频
+blocked_channels_url = input,"",tag=远程屏蔽频道列表,desc=公开的 HTTPS 纯文本直链（例如 GitHub Raw）。本地缓存每小时刷新，也可手动运行更新脚本。列表会与手动填写内容合并；留空则停用
+log_enabled = switch,false,tag=日志工具,desc=首次命中匹配请求时自动启动，并通知日志入口。关闭后，下一个 API 请求会清除日志并停止采样；如需保留请先下载。完整采样可能增加延迟
+quality_research = switch,false,tag=画质分析采样,desc=仅在日志工具开启时生效。记录可识别的画质和格式参数，并读取少量媒体 POST 请求用于比较；不会自动切换画质
+media_capture_mode = select,"headers","full",tag=媒体采样模式,desc=仅在日志工具开启时生效，关闭日志时自动停用。headers 只记录响应头；full 会读取完整响应内容用于开发，可能增加延迟
+log_level = select,"info","debug","warn","error",tag=日志等级,desc=info 保留完整脱敏跟踪记录；error 只保留错误；debug 保留调试信息；warn 保留警告和错误
+capture_budget = select,"32","16","64",tag=日志容量（MB）,desc=达到上限后停止记录，并保留已有样本。导出后可清理
+
+[Rule]
+# 让 API 和播放协商从 QUIC 回退到 TCP，以便 MitM 和脚本处理；不会拦截媒体内容。
+AND,((DOMAIN,youtubei.googleapis.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,youtubei-att.googleapis.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+# 匹配 googlevideo 域名及其子域上的 QUIC；同时处理 UDP/443 回退。
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,QUIC)),REJECT
+AND,((DOMAIN-SUFFIX,googlevideo.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+
+[Rewrite]
+# 仅对 YouTube 应用的 init POST 返回 Loon 内置空白视频；不读取请求体，也不影响普通媒体请求。
+# 更新于 2026-10-05，替代未生效的 HTTP 204 方案。播放回退恢复仍需真机确认。
+request if ${url} ~= /^https:\/\/[a-z0-9-]+\.googlevideo\.com\/initplayback(?:\?[^#]*)?$/i && ${request.method} == "POST" && ${request.header['User-Agent']} ~= /(?:^|\s)com\.google\.ios\.youtube\//i then reject_video(200)
+# 清除媒体源中的备用连接提示，减少拒绝后的 QUIC 重试；只处理响应头。
+# 更新于 2026-10-05。实际启动延迟仍需真机确认；客户端可能还会使用其他 HTTP/3 探测方式。
+^https://(?:[\w-]+\.)*googlevideo\.com(?::443)?/ response-header-replace Alt-Svc clear
+
+[Script]
+# 独立刷新频道列表缓存。信息流脚本仅读取缓存，不会等待远程下载。
+# 更新于 2026-10-07
+cron "0 * * * *" script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js,timeout=10,argument=[{blocked_channels_url}],tag=YouTube 定时更新屏蔽频道列表
+generic script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js,timeout=10,argument=[{blocked_channels_url}],tag=YouTube 手动更新屏蔽频道列表,img-url=person.crop.circle.badge.xmark.system
+http-request ^https:\/\/(?:www\.|m\.)?youtube\.com\/api\/timedtext\?[^#]+$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js,requires-body=false,timeout=10,enable={translation_enabled},argument=[{translation_enabled},{translation_target}],tag=YouTube 字幕目标语言
+# 仅在明确开启日志和画质分析时读取 videoplayback POST；不会匹配空白 init 视频。
+# 更新于 2026-10-07。此规则需排在普通日志规则之前，默认不缓存请求体。
+request if ${url} ~= /^https:\/\/[\w-]+\.googlevideo\.com\/videoplayback(?:\?[^#]*)?$/i && ${request.method} == "POST" && ${log_enabled} == true && ${quality_research} == true then script("https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js", {${log_enabled}, ${log_level}, ${capture_budget}, ${quality_research}}) with requires_body=true, binary_body_mode=true, timeout=10, tag="YouTube 画质分析请求采样"
+http-request ^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)\/youtubei\/v1\/(?:browse|next|search|reel\/reel_watch_sequence)(?:\?[^#]*)?$|^https:\/\/[\w-]+\.googlevideo\.com\/videoplayback\?[^#]*$|^http:\/\/youtube-logs\.invalid(?::80)?(?:\/[^#]*)?$|^https:\/\/[\w-]+\.googlevideo\.com\/initplayback(?:\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js,requires-body=false,timeout=10,enable={log_enabled},argument=[{log_enabled},{log_level},{capture_budget},{background_playback},{media_capture_mode},{quality_research}],tag=YouTube 日志与导出
+http-request ^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.)?youtube\.com)\/youtubei\/v1\/log_event(?:\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument=[{log_enabled},{log_level},{capture_budget},{playback_region}],tag=YouTube 配置请求处理
+# 媒体采样由日志总开关控制。关闭时，响应头和完整内容都不会采样。已保存采样模式不代表采样正在运行。
+# 必须在响应体到达前选好完整采样。每个响应只运行首个匹配脚本。默认响应头规则不传递 full，避免误读响应体。
+response if ${url} ~= /^https:\/\/[\w-]+\.googlevideo\.com\/(?:videoplayback|initplayback)(?:\?[^#]*)?$/i && ${log_enabled} == true && ${media_capture_mode} == "full" then script("https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/response.min.js", {${log_enabled}, ${log_level}, ${capture_budget}, ${media_capture_mode}}) with requires_body=true, binary_body_mode=true, timeout=30, tag="YouTube 完整媒体开发采样"
+http-response ^https:\/\/[\w-]+\.googlevideo\.com\/(?:videoplayback|initplayback)(?:\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/response.min.js,requires-body=false,timeout=10,enable={log_enabled},argument=[{log_enabled},{log_level},{capture_budget}],tag=YouTube 媒体响应日志
+http-response ^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.)?youtube\.com)\/youtubei\/v1\/(?:config|log_event)(?:\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument=[{log_enabled},{log_level},{capture_budget}],tag=YouTube Onesie 配置缓存
+
+http-request ^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)\/youtubei\/v1\/(?:player|get_watch)(?:\?[^#]*)?$|^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)\/youtubei\/v1\/player\/ad_break(?:\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/request.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument=[{log_enabled},{log_level},{capture_budget},{playback_region}],tag=YouTube 播放请求与广告配置处理
+
+http-response ^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)\/youtubei\/v1\/(browse|next|search)(\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument=[{log_enabled},{log_level},{capture_budget},{hide_home_shorts},{blocked_channels},{blocked_channels_url}],tag=YouTube 信息流广告与首页 Shorts 处理
+http-response ^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)\/youtubei\/v1\/(player|get_watch)(\?[^#]*)?$|^https:\/\/(?:youtubei(?:-att)?\.googleapis\.com|(?:www\.|m\.|music\.)?youtube\.com)\/youtubei\/v1\/reel\/reel_watch_sequence(?:\?[^#]*)?$ script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/refs/heads/main/Scripts/YouTube/response.min.js,requires-body=true,binary-body-mode=true,timeout=10,argument=[{log_enabled},{log_level},{capture_budget},{background_playback},{quality_research}],tag=YouTube 播放响应与后台播放
+
+[Mitm]
+hostname = youtubei.googleapis.com, youtubei-att.googleapis.com, youtube.com, www.youtube.com, m.youtube.com, music.youtube.com, *.googlevideo.com
+# 关闭日志时，init 和普通媒体响应都不会运行响应体采样脚本。init POST 由内置空白视频规则处理，普通播放请求仍会应用广告协商处理。
+# googlevideo 的 UDP 仅回退到 TCP，普通 videoplayback 媒体请求仍会放行。
