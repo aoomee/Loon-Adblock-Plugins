@@ -1,0 +1,37 @@
+#!name = 车来了去广告
+#!desc = 拦截车来了广告配置、广告任务、开屏资源及广告 SDK 域名；源规则适配车来了 7.6.6。需开启 MitM，第三方广告域名规则对其他 App 同样生效。
+#!author = CaoXiaoMann（Loon 适配 aoomee）
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
+#!date = 2026-10-14
+#!tag = 广告拦截
+
+# 来源：https://raw.githubusercontent.com/CaoXiaoMann/XiaoMan/main/Scripts/CheLaiLe/CheLaiLe.sgmodule
+# 使用 Loon 兼容的旧版 Rewrite 语法，保留直接拒绝请求的行为，无远程脚本依赖。
+
+[Rule]
+# 车来了专用广告与埋点
+DOMAIN,ad.chelaile.net.cn,REJECT
+DOMAIN,atrace.chelaile.net.cn,REJECT
+
+# 第三方广告 SDK：共享域名，启用后也会影响其他 App 的广告请求
+DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
+DOMAIN-SUFFIX,yg84.com,REJECT
+DOMAIN-SUFFIX,mobads.baidu.com,REJECT
+DOMAIN-SUFFIX,pos.baidu.com,REJECT
+DOMAIN-SUFFIX,sofire.baidu.com,REJECT
+
+[Rewrite]
+# 车来了广告配置、广告任务、开屏资源；限定真实域名边界
+^https?:\/\/(?:[A-Za-z0-9-]+\.)*chelaile(?:app)?\.cn\/(?:adpub|goocity\/advert|goocity\/flowPos\/home|feserver\/vip-page\/images\/).* reject
+^https?:\/\/(?:[A-Za-z0-9-]+\.)*chelaile\.net\.cn\/adpub\/.* reject
+
+# 保留源模块的第三方广告接口规则；HTTPS 请求由上面的域名规则直接拒绝，无需额外解密
+^https?:\/\/api-access\.pangolin-sdk-toutiao(?:1)?\.com\/api\/ad\/union\/sdk\/.* reject
+^https?:\/\/adx\.yg84\.com\/sdk\/ad\/.* reject
+^https?:\/\/mobads\.baidu\.com\/.* reject
+
+[Mitm]
+# 覆盖广告路径规则的主域和子域；不整域屏蔽公交业务 API
+hostname = chelaile.cn, *.chelaile.cn, chelaileapp.cn, *.chelaileapp.cn, chelaile.net.cn, *.chelaile.net.cn
