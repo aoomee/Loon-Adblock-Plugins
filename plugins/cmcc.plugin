@@ -1,0 +1,16 @@
+#!name = 中国移动去开屏广告
+#!desc = 拦截 res.app.coc.10086.cn 下 prd-mgcenter 目录的资源请求，返回 HTTP 200 空响应。需开启 MitM 并信任 Loon 证书。
+#!author = aoomee（用户提供规则，仓库整理）
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
+#!loon_version = 3.5.1(978)
+#!date = 2026-10-26
+#!tag = 广告拦截
+
+# 来源：用户提供的中国移动开屏拦截规则；移除原正则末尾的多余空格。
+# 按原规则匹配整个 prd-mgcenter/ 目录，未限定具体广告文件。
+
+[Rewrite]
+request if ${url} ~= /^https?:\/\/res\.app\.coc\.10086\.cn\/qwhdcdn_cmcc-cs_cn\/prd-mgcenter\//i then reject(200)
+
+[Mitm]
+hostname = res.app.coc.10086.cn

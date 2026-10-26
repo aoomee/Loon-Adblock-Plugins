@@ -6,6 +6,7 @@
 
 | 软件 | 功能 | 原作者 | 添加到 Loon | 源码 |
 | --- | --- | --- | --- | --- |
+| 中国移动 | 拦截指定开屏资源目录；需 Loon 3.5.1（978）+ | 用户提供（仓库整理 aoomee） | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fcmcc.plugin) | [规则](./plugins/cmcc.plugin) · [说明](./docs/cmcc.md) |
 | 美团 | 清理开屏、热词、推荐流，隐藏视频与小团 AI 标签；需 build 1008+ | ZenmoFeiShi（仓库整理 aoomee） | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fmeituan.lpx) | [规则](./plugins/meituan.lpx) · [说明](./docs/meituan.md) |
 | 车来了 | 拦截广告配置、广告任务、开屏资源及广告 SDK 域名 | CaoXiaoMann（Loon 适配 aoomee） | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fchelaile.plugin) | [规则](./plugins/chelaile.plugin) · [说明](./docs/chelaile.md) |
 | 航旅纵横 | 开屏/弹窗、首页运营位、瀑布流、会员推广、行程扩容与广告图片清理 | @ddgksf2013 / 墨鱼（Loon 适配 aoomee） | [一键导入](https://www.nsloon.com/openloon/import?plugin=https%3A%2F%2Fraw.githubusercontent.com%2Faoomee%2FLoon-Adblock-Plugins%2Fmain%2Fplugins%2Fumetrip.plugin) | [规则](./plugins/umetrip.plugin) · [说明](./docs/umetrip.md) |
