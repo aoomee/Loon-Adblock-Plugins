@@ -1,11 +1,18 @@
 #!name = 车来了去广告
-#!desc = 屏蔽车来了 App 广告下发接口、广告图片与第三方广告 SDK
+#!desc = 屏蔽车来了 App 广告下发接口、营销位、广告图片与第三方广告 SDK
 #!author = CaoXiaoMann
 #!homepage = https://github.com/CaoXiaoMann/XiaoMan
-# 适配版本：车来了 7.6.6 / 7.6.7
+# 适配版本：车来了 7.6.6，2026-11-05 实机抓包验证
 # 域名拦截为全设备生效，会影响其他 App 的激励视频、看广告换权益
-# adPosition=23 对应「我的」页营销位：我的零钱 / 每日签到 / VIP会员 + 美团 banner
-# 底部 tab 为原生控件，插件无法移除；「发现」页数据源待抓包补充
+#
+# 实测流量位 adPosition 对照（flowPos/listByPos 的 query 参数）：
+#   22 = 首页营销位：签到 / 邀请好友 / 活动
+#   23 = 「我的」页营销位：每日签到 / VIP会员 / 我的零钱
+#   29 = 美团权益 banner：image3/qb5ZXXzk.png → quanyi.yh-jiudian.com
+#
+# 注意：车来了接口响应体统一包了一层 **YGKJ{...}YGKJ## 外壳。
+# 所以这里一律用 reject（404 空响应），不用 reject-dict —— 裸 {} 不带外壳，
+# App 会当解析失败。实测被 reject 的接口，App 表现正常。
 [Rule]
 # 车来了自有广告、埋点、统计
 DOMAIN,ad.chelaile.net.cn,REJECT
@@ -61,19 +68,29 @@ DOMAIN,orzonera.yingt.fun,REJECT
 DOMAIN,ali-stats.jpush.cn,REJECT
 DOMAIN,gd-stats.jpush.cn,REJECT
 [Rewrite]
-# 「我的」页营销位（adPosition=23），须放在全量 listByPos 之前
-^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos.*adPosition=23(?:&|$) reject-dict
-^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/listByPos.*adPosition=23(?:&|$) reject-dict
-# 全量流量位配置；若只想干掉「我的」页，注释掉下面四行
-^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/home reject-dict
-^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos reject-dict
-^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/home reject-dict
-^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/listByPos reject-dict
-# 广告 SDK 配置、广告任务、激励活动（adpub 已覆盖 adpub/sdk/adConfig）
+# 流量位配置：首页 / 「我的」页 / 美团 banner 全在这里，一条通杀
+# 若只想干掉「我的」页，改成只留 adPosition=23 那条，见下方注释
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos reject
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/listByPos reject
+# 精确版（只拦「我的」页三个入口，放行首页）：
+# ^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos.*adPosition=23(?:&|$) reject
+# 首页流量位配置
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/home reject
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/home reject
+# 广告 SDK 配置、广告任务、激励活动
 ^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/adpub\/.* reject
 ^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/adpub\/.* reject
 ^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/encourage\/activity\/control reject
 ^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/encourage\/activity\/control reject
+# 「发现」页内容配置（下发聚合栏目，指向 bus-stroll-new 信息流 H5）
+# 拦掉后发现页变空白。底部 tab 图标是原生控件，无法移除。
+# 若发现其他页面异常，注释掉这两行
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/content\/agg\/tab\/info reject
+^https?:\/\/cdn\.web\.chelaile\.net\.cn\/info-flow\/ reject
+# 运营位信息流
+^https?:\/\/web\.chelaile\.net\.cn\/api\/operative_position\/ reject
+# VIP 页的广告任务接口
+^https?:\/\/www\.chelaile\.net\.cn\/feserver\/vip-page\/api\/adpub\/ reject
 # 埋点：UDID 过滤 / 数据分析
 ^https?:\/\/(api|cdn\.api)\.chelaile(?:app)?(?:\.net)?\.cn\/DataAnalysisInfo\/.* reject
 # 活动广告位
@@ -83,7 +100,8 @@ DOMAIN,gd-stats.jpush.cn,REJECT
 ^https?:\/\/pic1\.chelaile\.net\.cn\/adv\/.* reject-img
 ^https?:\/\/image3\.chelaile\.net\.cn\/qb5ZXXzk\.png.* reject-img
 ^https?:\/\/quanyi\.yh-jiudian\.com\/activity8\/.* reject-img
+# VIP 页图片：会让 VIP 页配图加载失败，介意可注释
 ^https?:\/\/[^\/]*chelaile\.net\.cn\/feserver\/vip-page\/images\/.* reject-img
 ^https?:\/\/[^\/]*chelaileapp\.cn\/feserver\/vip-page\/images\/.* reject-img
 [Mitm]
-hostname = api.chelaile.net.cn, cdn.api.chelaile.net.cn, api.chelaileapp.cn, cdn.api.chelaileapp.cn, image3.chelaile.net.cn, pic1.chelaile.net.cn, quanyi.yh-jiudian.com
+hostname = api.chelaile.net.cn, cdn.api.chelaile.net.cn, api.chelaileapp.cn, cdn.api.chelaileapp.cn, web.chelaile.net.cn, cdn.web.chelaile.net.cn, www.chelaile.net.cn, image3.chelaile.net.cn, pic1.chelaile.net.cn, quanyi.yh-jiudian.com
