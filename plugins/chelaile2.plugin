@@ -1,18 +1,22 @@
 #!name = 车来了去广告
 #!desc = 屏蔽车来了 App 广告下发接口、营销位、广告图片与第三方广告 SDK
 #!author = CaoXiaoMann
-#!homepage = https://github.com/CaoXiaoMann/XiaoMan
+#!homepage = https://github.com/aoomee/Loon-Adblock-Plugins
 # 适配版本：车来了 7.6.6，2026-11-05 实机抓包验证
-# 域名拦截为全设备生效，会影响其他 App 的激励视频、看广告换权益
 #
 # 实测流量位 adPosition 对照（flowPos/listByPos 的 query 参数）：
 #   22 = 首页营销位：签到 / 邀请好友 / 活动
 #   23 = 「我的」页营销位：每日签到 / VIP会员 / 我的零钱
 #   29 = 美团权益 banner：image3/qb5ZXXzk.png → quanyi.yh-jiudian.com
 #
-# 注意：车来了接口响应体统一包了一层 **YGKJ{...}YGKJ## 外壳。
-# 所以这里一律用 reject（404 空响应），不用 reject-dict —— 裸 {} 不带外壳，
-# App 会当解析失败。实测被 reject 的接口，App 表现正常。
+# 为什么流量位用脚本而不是 reject：
+#   车来了响应体包了一层 **YGKJ{...}YGKJ## 外壳。reject 返回 404 空 body，
+#   App 解析失败会沿用本地旧缓存，旧缓存里的广告位照样渲染，图片又被拦掉，
+#   于是留下灰色空白。脚本返回「合法但 flowList 为空」的配置，App 会用它
+#   覆盖缓存，下次启动读到的也是空。
+#   装好脚本后卸载重装一次 App，让缓存被洗成空，之后就不再复现。
+#
+# 域名拦截为全设备生效，会影响其他 App 的激励视频、看广告换权益
 [Rule]
 # 车来了自有广告、埋点、统计
 DOMAIN,ad.chelaile.net.cn,REJECT
@@ -68,15 +72,6 @@ DOMAIN,orzonera.yingt.fun,REJECT
 DOMAIN,ali-stats.jpush.cn,REJECT
 DOMAIN,gd-stats.jpush.cn,REJECT
 [Rewrite]
-# 流量位配置：首页 / 「我的」页 / 美团 banner 全在这里，一条通杀
-# 若只想干掉「我的」页，改成只留 adPosition=23 那条，见下方注释
-^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos reject
-^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/listByPos reject
-# 精确版（只拦「我的」页三个入口，放行首页）：
-# ^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos.*adPosition=23(?:&|$) reject
-# 首页流量位配置
-^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/home reject
-^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/home reject
 # 广告 SDK 配置、广告任务、激励活动
 ^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/adpub\/.* reject
 ^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/adpub\/.* reject
@@ -96,12 +91,17 @@ DOMAIN,gd-stats.jpush.cn,REJECT
 # 活动广告位
 ^https?:\/\/[^\/]*chelaile\.net\.cn\/goocity\/advert\/.* reject
 ^https?:\/\/[^\/]*chelaileapp\.cn\/goocity\/advert\/.* reject
-# 广告图片：pic1 仅 /adv/ 目录是广告，同域其他路径为业务图
+# 广告图片：配置已被脚本置空时这些不会触发，作为兜底保留
+# pic1 仅 /adv/ 目录是广告，同域其他路径为业务图
 ^https?:\/\/pic1\.chelaile\.net\.cn\/adv\/.* reject-img
 ^https?:\/\/image3\.chelaile\.net\.cn\/qb5ZXXzk\.png.* reject-img
 ^https?:\/\/quanyi\.yh-jiudian\.com\/activity8\/.* reject-img
 # VIP 页图片：会让 VIP 页配图加载失败，介意可注释
 ^https?:\/\/[^\/]*chelaile\.net\.cn\/feserver\/vip-page\/images\/.* reject-img
 ^https?:\/\/[^\/]*chelaileapp\.cn\/feserver\/vip-page\/images\/.* reject-img
+[Script]
+# 流量位置空：flowPos/listByPos 与 flowPos/home
+# requires-body=1 不能漏，否则脚本拿不到 $response.body 会静默失败
+http-response ^https?:\/\/(api|cdn\.api)\.chelaile(?:app)?(?:\.net)?\.cn\/goocity\/flowPos\/(listByPos|home) script-path=https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/refs/heads/main/plugins/CheLaiLe-flowpos.js, requires-body=1, timeout=10
 [Mitm]
 hostname = api.chelaile.net.cn, cdn.api.chelaile.net.cn, api.chelaileapp.cn, cdn.api.chelaileapp.cn, web.chelaile.net.cn, cdn.web.chelaile.net.cn, www.chelaile.net.cn, image3.chelaile.net.cn, pic1.chelaile.net.cn, quanyi.yh-jiudian.com
