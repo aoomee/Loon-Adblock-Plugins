@@ -9,15 +9,14 @@
 #   23 = 「我的」页营销位：每日签到 / VIP会员 / 我的零钱
 #   29 = 美团权益 banner：image3/qb5ZXXzk.png → quanyi.yh-jiudian.com
 #
-# 为什么流量位用脚本而不是 reject：
-#   车来了响应体包了一层 **YGKJ{...}YGKJ## 外壳。reject 返回 404 空 body，
-#   App 解析失败会沿用本地旧缓存，旧缓存里的广告位照样渲染，图片又被拦掉，
-#   于是留下灰色空白。脚本返回「合法但 flowList 为空」的配置，App 会用它
-#   覆盖缓存，下次启动读到的也是空。
-#   装好脚本后卸载重装一次 App，让缓存被洗成空，之后就不再复现。
-#
 # 域名拦截为全设备生效，会影响其他 App 的激励视频、看广告换权益
 [Rule]
+# 屏蔽 QUIC / HTTP3（UDP 443）
+# 车来了部分请求会走 HTTP/3，Loon 无法解密 QUIC，这些请求会绕过 MITM 直连，
+# 表现为「广告时有时无」：走 H2 时被拦，走 H3 时广告回来，且无法复现。
+# 屏蔽后 App 自动回落到 HTTP/2，即可被正常拦截。
+# 该规则全设备生效，其他 App 也会回落 TCP，一般无感；若某 App 异常可删掉这行
+AND,((PROTOCOL,UDP),(DEST-PORT,443)),REJECT
 # 车来了自有广告、埋点、统计
 DOMAIN,ad.chelaile.net.cn,REJECT
 DOMAIN,atrace.chelaile.net.cn,REJECT
@@ -72,6 +71,10 @@ DOMAIN,orzonera.yingt.fun,REJECT
 DOMAIN,ali-stats.jpush.cn,REJECT
 DOMAIN,gd-stats.jpush.cn,REJECT
 [Rewrite]
+# 首页流量位：用 reject。home 的响应结构未验证（抓包中一直被拦，从未拿到真实响应），
+# 用脚本清字段可能无效，reject 是实测有效的做法
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/home reject
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/home reject
 # 广告 SDK 配置、广告任务、激励活动
 ^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/adpub\/.* reject
 ^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/adpub\/.* reject
@@ -100,8 +103,8 @@ DOMAIN,gd-stats.jpush.cn,REJECT
 ^https?:\/\/[^\/]*chelaile\.net\.cn\/feserver\/vip-page\/images\/.* reject-img
 ^https?:\/\/[^\/]*chelaileapp\.cn\/feserver\/vip-page\/images\/.* reject-img
 [Script]
-# 流量位置空：flowPos/listByPos 与 flowPos/home
+# 只处理 listByPos（「我的」页等流量位），home 交给上面的 reject
 # requires-body=1 不能漏，否则脚本拿不到 $response.body 会静默失败
-http-response ^https?:\/\/(api|cdn\.api)\.chelaile(?:app)?(?:\.net)?\.cn\/goocity\/flowPos\/(listByPos|home) script-path=https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/refs/heads/main/plugins/CheLaiLe-flowpos.js, requires-body=1, timeout=10
+http-response ^https?:\/\/(api|cdn\.api)\.chelaile(?:app)?(?:\.net)?\.cn\/goocity\/flowPos\/listByPos script-path=https://raw.githubusercontent.com/aoomee/Loon-Adblock-Plugins/refs/heads/main/plugins/CheLaiLe-flowpos.js, requires-body=1, timeout=20
 [Mitm]
 hostname = api.chelaile.net.cn, cdn.api.chelaile.net.cn, api.chelaileapp.cn, cdn.api.chelaileapp.cn, web.chelaile.net.cn, cdn.web.chelaile.net.cn, www.chelaile.net.cn, image3.chelaile.net.cn, pic1.chelaile.net.cn, quanyi.yh-jiudian.com
