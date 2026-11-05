@@ -1,0 +1,89 @@
+#!name = 车来了去广告
+#!desc = 屏蔽车来了 App 广告下发接口、广告图片与第三方广告 SDK
+#!author = CaoXiaoMann
+#!homepage = https://github.com/CaoXiaoMann/XiaoMan
+# 适配版本：车来了 7.6.6 / 7.6.7
+# 域名拦截为全设备生效，会影响其他 App 的激励视频、看广告换权益
+# adPosition=23 对应「我的」页营销位：我的零钱 / 每日签到 / VIP会员 + 美团 banner
+# 底部 tab 为原生控件，插件无法移除；「发现」页数据源待抓包补充
+[Rule]
+# 车来了自有广告、埋点、统计
+DOMAIN,ad.chelaile.net.cn,REJECT
+DOMAIN,atrace.chelaile.net.cn,REJECT
+DOMAIN,logs.chelaile.net.cn,REJECT
+# 智能营销素材 CDN（7.6.7 起横幅 bigIcon 走这里，域名级拦截不依赖解密）
+DOMAIN-SUFFIX,smartimg.chelaile.net.cn,REJECT
+# 亿广广告联盟
+DOMAIN-SUFFIX,yg84.com,REJECT
+# 穿山甲（字节）广告 SDK
+DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao1.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
+DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
+DOMAIN-SUFFIX,ctobsnssdk.com,REJECT
+DOMAIN,lf-cdn-tos.bytescm.com,REJECT
+DOMAIN,webcast-open.douyin.com,REJECT
+# 巨量 / 火山引擎广告 SDK
+DOMAIN,mssdk.volces.com,REJECT
+DOMAIN,apmplus.volces.com,REJECT
+DOMAIN,vod-license-m.volccdn.com,REJECT
+# 腾讯广告（广点通）：只挑子域，不整域拦 gdt.qq.com，避免误伤 QQ 体系
+DOMAIN,mi.gdt.qq.com,REJECT
+DOMAIN,win.gdt.qq.com,REJECT
+DOMAIN,v2mi.gdt.qq.com,REJECT
+DOMAIN,c3.gdt.qq.com,REJECT
+DOMAIN,v.gdt.qq.com,REJECT
+DOMAIN,t.gdt.qq.com,REJECT
+DOMAIN,v3.gdt.qq.com,REJECT
+DOMAIN,sdk.e.qq.com,REJECT
+DOMAIN,sdkquic.e.qq.com,REJECT
+DOMAIN,tdid.m.qq.com,REJECT
+DOMAIN,pgdt.ugdtimg.com,REJECT
+DOMAIN,adsmind.ugdtimg.com,REJECT
+DOMAIN,qzs.gdtimg.com,REJECT
+DOMAIN,tencent-ssp.66mobi.com,REJECT
+# 百度广告
+DOMAIN-SUFFIX,mobads.baidu.com,REJECT
+DOMAIN,mobads-logs.baidu.com,REJECT
+DOMAIN-SUFFIX,pos.baidu.com,REJECT
+DOMAIN-SUFFIX,sofire.baidu.com,REJECT
+DOMAIN,nadvideo2.baidu.com,REJECT
+DOMAIN,feed-image.baidu.com,REJECT
+# 百度视频广告的动态 CDN 回源镜像，共用 CDN 池，影响其他 App 可单独删
+DOMAIN-SUFFIX,jomoxc.com,REJECT
+# 其他广告联盟 / 归因
+DOMAIN-SUFFIX,1rtb.com,REJECT
+DOMAIN,rtb.julang.taobao.com,REJECT
+DOMAIN,qh-material.taobao.com,REJECT
+DOMAIN,gungnir.xiaojukeji.com,REJECT
+DOMAIN,orzonera.yingt.fun,REJECT
+# 推送 SDK 统计上报（不影响离线推送与到站提醒）
+DOMAIN,ali-stats.jpush.cn,REJECT
+DOMAIN,gd-stats.jpush.cn,REJECT
+[Rewrite]
+# 「我的」页营销位（adPosition=23），须放在全量 listByPos 之前
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos.*adPosition=23(?:&|$) reject-dict
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/listByPos.*adPosition=23(?:&|$) reject-dict
+# 全量流量位配置；若只想干掉「我的」页，注释掉下面四行
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/home reject-dict
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/goocity\/flowPos\/listByPos reject-dict
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/home reject-dict
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/goocity\/flowPos\/listByPos reject-dict
+# 广告 SDK 配置、广告任务、激励活动（adpub 已覆盖 adpub/sdk/adConfig）
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/adpub\/.* reject
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/adpub\/.* reject
+^https?:\/\/(api|cdn\.api)\.chelaile\.net\.cn\/encourage\/activity\/control reject
+^https?:\/\/(api|cdn\.api)\.chelaileapp\.cn\/encourage\/activity\/control reject
+# 埋点：UDID 过滤 / 数据分析
+^https?:\/\/(api|cdn\.api)\.chelaile(?:app)?(?:\.net)?\.cn\/DataAnalysisInfo\/.* reject
+# 活动广告位
+^https?:\/\/[^\/]*chelaile\.net\.cn\/goocity\/advert\/.* reject
+^https?:\/\/[^\/]*chelaileapp\.cn\/goocity\/advert\/.* reject
+# 广告图片：pic1 仅 /adv/ 目录是广告，同域其他路径为业务图
+^https?:\/\/pic1\.chelaile\.net\.cn\/adv\/.* reject-img
+^https?:\/\/image3\.chelaile\.net\.cn\/qb5ZXXzk\.png.* reject-img
+^https?:\/\/quanyi\.yh-jiudian\.com\/activity8\/.* reject-img
+^https?:\/\/[^\/]*chelaile\.net\.cn\/feserver\/vip-page\/images\/.* reject-img
+^https?:\/\/[^\/]*chelaileapp\.cn\/feserver\/vip-page\/images\/.* reject-img
+[Mitm]
+hostname = api.chelaile.net.cn, cdn.api.chelaile.net.cn, api.chelaileapp.cn, cdn.api.chelaileapp.cn, image3.chelaile.net.cn, pic1.chelaile.net.cn, quanyi.yh-jiudian.com
